@@ -120,7 +120,10 @@ $ppdbs = $ppdbRepository->getAllPaginated($_GET['page'] ?? 1, 15);
                             <td><?php echo $ppdb['street'] . ', ' . $ppdb['city'] . ', ' . $ppdb['rtrw']; ?></td>
                             <td><?php echo $ppdb['phone']; ?></td>
                             <td>
-                                <!-- Tambahkan aksi di sini -->
+                                <form action="app/delete.php" method="post">
+                                    <input type="hidden" name="id" value="<?php echo $ppdb['id']; ?>" />
+                                    <button type="submit" class=" " onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">Hapus</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -171,9 +174,7 @@ $ppdbs = $ppdbRepository->getAllPaginated($_GET['page'] ?? 1, 15);
                 </button>
             </div>
             <!-- download previous template -->
-            <div class="modal-body">
-                <p>Download template sebelumnya <a href="app/download.php?file=template.docx">disini</a></p>
-            </div>
+
             <div class="modal-body">
                 <form action="app/upload.php" method="post" enctype="multipart/form-data">
                     <div class="mb-3">

@@ -109,4 +109,11 @@ class PpdbRepository extends Database
 
         return $imageName;
     }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM ppdbs WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+    }
 }
