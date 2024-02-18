@@ -97,34 +97,62 @@ $ppdbs = $ppdbRepository->getAllPaginated($_GET['page'] ?? 1, 15);
             <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col">Action</th>
                         <th scope="col">No Registrasi</th>
                         <th scope="col">Nama Lengkap</th>
-                        <th scope="col">L/P</th>
-                        <th scope="col">Asal Sekolah</th>
-                        <th scope="col">NISN</th>
-                        <th scope="col">NIK</th>
                         <th scope="col">Alamat</th>
-                        <th scope="col">Telepon</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col">TTL</th>
+                        <th scope="col">L/P</th>
+                        <th scope="col">Gol. Darah</th>
+                        <th scope="col">Asal Sekolah</th>
+                        <th scope="col">No. Ijazah</th>
+                        <th scope="col">NISN</th>
+                        <th scope="col">Agama</th>
+                        <th scope="col">No.HP</th>
+                        <th scope="col">Detail Ayah</th>
+                        <th scope="col">Detail Ibu</th>
+                        <th scope="col">Alamat Org. Tua</th>
+                        <th scope="col">Detail Wali</th>
+                        <th scope="col">Kejuruan </th>
+                        <th scope="col">KIP</th>
+                        <!-- REFF -->
+                        <th scope="col">Reff</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($ppdbs['data'] as $ppdb) : ?>
                         <tr>
-                            <td><?php echo $ppdb['registration_no']; ?></td>
-                            <td><?php echo $ppdb['full_name']; ?></td>
-                            <td><?php echo $ppdb['gender']; ?></td>
-                            <td><?php echo $ppdb['school_name']; ?></td>
-                            <td><?php echo $ppdb['nisn']; ?></td>
-                            <td><?php echo $ppdb['nik']; ?></td>
-                            <td><?php echo $ppdb['street'] . ', ' . $ppdb['city'] . ', ' . $ppdb['rtrw']; ?></td>
-                            <td><?php echo $ppdb['phone']; ?></td>
                             <td>
                                 <form action="app/delete.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo $ppdb['id']; ?>" />
                                     <button type="submit" class=" " onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">Hapus</button>
                                 </form>
+                                <form action="app/downloadpdf.php" method="post">
+                                    <input type="hidden" name="regno" value="<?php echo $ppdb['registration_no']; ?>" />
+                                    <button type="submit" class=" " onclick="return confirm('Apakah anda yakin ingin mengunduh data ini?')">Download</button>
+                                </form>
                             </td>
+                            <td><?php echo $ppdb['registration_no']; ?></td>
+                            <td><?php echo $ppdb['full_name']; ?></td>
+                            <td><?php echo $ppdb['student_address']; ?></td>
+                            <td><?php echo $ppdb['ttl']; ?></td>
+                            <td><?php echo $ppdb['gender']; ?></td>
+                            <td><?php echo $ppdb['blood_type']; ?></td>
+                            <td><?php echo $ppdb['school_origin'] . ' (' . $ppdb['school_origin_type'] . ') <br> alamat: ' . $ppdb['school_origin_address']; ?></td>
+                            <td><?php echo $ppdb['ijazah_number']; ?></td>
+                            <td><?php echo $ppdb['nisn']; ?></td>
+                            <td><?php echo $ppdb['religion']; ?></td>
+                            <td><?php echo $ppdb['student_phone']; ?></td>
+                            <td><?php echo $ppdb['father_name'] . ', ' . $ppdb['father_job'] . ', ' . $ppdb['father_phone']; ?></td>
+                            <td><?php echo $ppdb['mother_name'] . ', ' . $ppdb['mother_job'] . ', ' . $ppdb['mother_phone']; ?></td>
+                            <td><?php echo $ppdb['parents_address']; ?></td>
+                            <td><?php echo $ppdb['guardian_name'] . ', ' . $ppdb['guardian_job'] . ', ' . $ppdb['guardian_phone'] . ', ' . $ppdb['guardian_relationship'] . ', ' . $ppdb['guardian_address'] . ' (' . $ppdb['guardian_relationship'] . ')'; ?></td>
+                            <td><?php echo '1. ' . $ppdb['first_choice'] . '<br> 2. ' . $ppdb['second_choice']; ?></td>
+                            <td><?php echo $ppdb['has_kip'] ? 'Ya' : 'Tidak'; ?></td>
+                            <td> <?php echo $ppdb['information_source'] . ' (' . $ppdb['friend_name'] . ')'; ?></td>
+
+
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -145,6 +173,10 @@ $ppdbs = $ppdbRepository->getAllPaginated($_GET['page'] ?? 1, 15);
     <div class="footer-menu">
         <button class="btn btn-link text-white outline-none" data-bs-toggle="modal" data-bs-target="#uploadTemplateModal"><i class="fas fa-upload"></i> Upload Template</button>
         <a href="app/export.php"><i class="fas fa-download"></i> Export Data</a>
+        <!-- logout -->
+        <form action="logout.php" method="post">
+            <button type="submit" class="btn btn-link text-white"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </form>
     </div>
 
 
@@ -174,7 +206,12 @@ $ppdbs = $ppdbRepository->getAllPaginated($_GET['page'] ?? 1, 15);
                 </button>
             </div>
             <!-- download previous template -->
-
+            <div class="modal-body">
+                <form action="app/downloadpdf.php" method="post">
+                    <input type="hidden" name="template" value="1" />
+                    Download template sebelumnya <button type="submit" class="btn-link bg-transparent border-0">Disini</button>
+                </form>
+            </div>
             <div class="modal-body">
                 <form action="app/upload.php" method="post" enctype="multipart/form-data">
                     <div class="mb-3">

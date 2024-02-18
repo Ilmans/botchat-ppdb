@@ -6,8 +6,6 @@ namespace classes;
 
 
 use PhpOffice\PhpWord\TemplateProcessor;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Settings;
 
 class DocumentGenerator
 {
@@ -23,17 +21,38 @@ class DocumentGenerator
 
 
         // Load the template processor
-        $templateProcessor = new TemplateProcessor(ROOT_PATH . '/upload/template.docx');
+        // check existed file .doc or .docx
+        if (file_exists(ROOT_PATH . '/upload/template.doc')) {
+            $templateProcessor = new TemplateProcessor(ROOT_PATH . '/upload/template.doc');
+        } else {
+            $templateProcessor = new TemplateProcessor(ROOT_PATH . '/upload/template.docx');
+        }
+
 
         // Replace placeholders with actual values
+        // Replace placeholders with actual values
         $templateProcessor->setValue('nama', $data['full_name']);
-        $templateProcessor->setValue('asal_sekolah', $data['school_name']);
-        $templateProcessor->setValue('jalan', $data['street']);
-        $templateProcessor->setValue('rtrw', $data['rtrw']);
-        $templateProcessor->setValue('kota', $data['city']);
-        $templateProcessor->setValue('nohp', $data['phone']);
         $templateProcessor->setValue('nisn', $data['nisn']);
-        $templateProcessor->setValue('nik', $data['nik']);
+        $templateProcessor->setValue('ttl', $data['ttl']);
+        $templateProcessor->setValue('jenis_kelamin', $data['gender'] == 'L' ? 'Laki-laki' : 'Perempuan');
+        $templateProcessor->setValue('agama', $data['religion']);
+        $templateProcessor->setValue('alamat_siswa', $data['student_address']);
+        $templateProcessor->setValue('sekolah_asal', $data['school_origin']);
+        $templateProcessor->setValue('tipe_sekolah_asal', $data['school_origin_type']);
+        $templateProcessor->setValue('alamat_sekolah_asal', $data['school_origin_address']);
+        $templateProcessor->setValue('jurusan_pertama', $data['first_choice']);
+        $templateProcessor->setValue('jurusan_kedua', $data['second_choice']);
+        $templateProcessor->setValue('kip', $data['has_kip'] ? 'Ya' : 'Tidak');
+        $templateProcessor->setValue('nama_ayah', $data['father_name']);
+        $templateProcessor->setValue('nama_ibu', $data['mother_name']);
+        $templateProcessor->setValue('alamat_orang_tua', $data['parents_address']);
+        $templateProcessor->setValue('nohp_orang_tua', $data['father_phone']); // Assuming father's phone is the main contact
+        $templateProcessor->setValue('pekerjaan_ayah', $data['father_job']);
+        $templateProcessor->setValue('pekerjaan_ibu', $data['mother_job']);
+        $templateProcessor->setValue('nama_wali', $data['guardian_name']);
+        $templateProcessor->setValue('alamat_wali', $data['guardian_address']);
+        $templateProcessor->setValue('nohp_wali', $data['guardian_phone']);
+        $templateProcessor->setValue('pekerjaan_wali', $data['guardian_job']);
         if ($data['transfer']) {
             $templateProcessor->setImageValue('image', array(
                 'path' => ROOT_PATH . '/upload/transfer/' . $data['registration_no'] . '.jpg',
@@ -47,15 +66,15 @@ class DocumentGenerator
         $temp_file = ROOT_PATH . '/upload/documents/' . $data['registration_no'] . '.docx';
         $templateProcessor->saveAs($temp_file);
 
-        Settings::setPdfRenderer(Settings::PDF_RENDERER_DOMPDF, ROOT_PATH . '/vendor/dompdf/dompdf');
+        //Settings::setPdfRenderer(Settings::PDF_RENDERER_TCPDF, ROOT_PATH . '/vendor/tecnickcom/tcpdf');
 
         // Convert to PDF
-        $phpWord = IOFactory::load($temp_file);
-        $xmlWriter = IOFactory::createWriter($phpWord, 'PDF');
-        $xmlWriter->save(ROOT_PATH . '/upload/documents/' . $data['registration_no'] . '.pdf');
+        // $phpWord = IOFactory::load($temp_file);
+        // $xmlWriter = IOFactory::createWriter($phpWord, 'PDF');
+        // $xmlWriter->save(ROOT_PATH . '/upload/documents/' . $data['registration_no'] . '.pdf');
 
         // Delete the temp file
-        unlink($temp_file);
+        //  unlink($temp_file);
         return true;
     }
 

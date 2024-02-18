@@ -28,27 +28,44 @@ class PpdbRepository extends Database
         } while ($this->checkRegistrationNumber($regNo));
         return $regNo;
     }
-    public function insertPpdb($name, $gender, $schoolName, $nisn, $nik, $street, $city, $rtrw, $phone)
+    public function insertPpdb($full_name, $ttl, $gender, $blood_type, $school_origin, $school_origin_type, $school_origin_address, $ijazah_number, $nisn, $religion, $student_address, $student_phone, $father_name, $father_job, $father_phone, $mother_name, $mother_job, $mother_phone, $parents_address, $guardian_name, $guardian_job, $guardian_phone, $guardian_relationship, $guardian_address, $first_choice, $second_choice, $information_source, $friend_name, $has_kip)
     {
-        $regNo = $this->randomRegistrationNumber();
-        $sql = "INSERT INTO ppdbs (registration_no,full_name,gender,school_name,nisn,nik,street,city,rtrw,phone) VALUES (:registration_no,:full_name,:gender,:school_name,:nisn,:nik,:street,:city,:rtrw,:phone)";
+        $sql = "INSERT INTO ppdbs (registration_no, full_name, ttl, gender, blood_type, school_origin, school_origin_type, school_origin_address, ijazah_number, nisn, religion, student_address, student_phone, father_name, father_job, father_phone, mother_name, mother_job, mother_phone, parents_address, guardian_name, guardian_job, guardian_phone, guardian_relationship, guardian_address, first_choice, second_choice, information_source, friend_name, has_kip) VALUES (:registration_no, :full_name, :ttl, :gender, :blood_type, :school_origin, :school_origin_type, :school_origin_address, :ijazah_number, :nisn, :religion, :student_address, :student_phone, :father_name, :father_job, :father_phone, :mother_name, :mother_job, :mother_phone, :parents_address, :guardian_name, :guardian_job, :guardian_phone, :guardian_relationship, :guardian_address, :first_choice, :second_choice, :information_source, :friend_name, :has_kip)";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
-            'registration_no' => $regNo,
-            'full_name' => $name,
+            'registration_no' => $no = $this->randomRegistrationNumber(),
+            'full_name' => $full_name,
+            'ttl' => $ttl,
             'gender' => $gender,
-            'school_name' => $schoolName,
+            'blood_type' => $blood_type,
+            'school_origin' => $school_origin,
+            'school_origin_type' => $school_origin_type,
+            'school_origin_address' => $school_origin_address,
+            'ijazah_number' => $ijazah_number,
             'nisn' => $nisn,
-            'nik' => $nik,
-            'street' => $street,
-            'city' => $city,
-            'rtrw' => $rtrw,
-            'phone' => $phone,
-
+            'religion' => $religion,
+            'student_address' => $student_address,
+            'student_phone' => $student_phone,
+            'father_name' => $father_name,
+            'father_job' => $father_job,
+            'father_phone' => $father_phone,
+            'mother_name' => $mother_name,
+            'mother_job' => $mother_job,
+            'mother_phone' => $mother_phone,
+            'parents_address' => $parents_address,
+            'guardian_name' => $guardian_name,
+            'guardian_job' => $guardian_job,
+            'guardian_phone' => $guardian_phone,
+            'guardian_relationship' => $guardian_relationship,
+            'guardian_address' => $guardian_address,
+            'first_choice' => $first_choice,
+            'second_choice' => $second_choice,
+            'information_source' => $information_source,
+            'friend_name' => $friend_name,
+            'has_kip' => $has_kip
         ]);
-        return $regNo;
+        return $no;
     }
-
     public function getAllPaginated($page, $perPage)
     {
         $offset = ($page - 1) * $perPage;

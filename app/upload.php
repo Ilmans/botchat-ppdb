@@ -35,7 +35,13 @@ if (!in_array($extension, $allowedExtension)) {
     header('Location: ../index.php');
     exit;
 }
-
+//delete old template
+try {
+    unlink(ROOT_PATH . '/upload/template.doc');
+    unlink(ROOT_PATH . '/upload/template.docx');
+} catch (\Throwable $th) {
+    //throw $th;
+}
 $filename = ROOT_PATH . '/upload/' . 'template.' . $extension;
 if (!move_uploaded_file($file['tmp_name'], $filename)) {
     $_SESSION['message'] = 'Error upload file';

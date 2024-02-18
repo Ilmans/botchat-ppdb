@@ -1,25 +1,32 @@
 <?php
-
 require_once '../config/common.php';
 
 use classes\Auth;
 
-$title = 'Login';
+$title = 'Sign Up';
 $auth = new Auth();
-
-if ($auth->isLogin()) {
-    header('Location: ../index.php');
-    exit;
-}
 
 $errorMessage = '';
 
-if (isset($_POST['username']) && isset($_POST['password'])) {
-    if ($auth->doLogin($_POST['username'], $_POST['password'])) {
-        header('Location: ../index.php');
-        exit;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Validasi email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errorMessage = 'Format email tidak valid';
     } else {
-        $errorMessage = 'Username atau password salah. Silakan coba lagi.';
+        // Proses pembuatan akun
+        $result = $auth->createAccount($username, $email, $password);
+        if ($result === true) {
+            // Jika pembuatan akun berhasil, redirect ke halaman login
+            header('Location: login.php');
+            exit;
+        } else {
+            // Jika terjadi kesalahan, tampilkan pesan kesalahan
+            $errorMessage = $result;
+        }
     }
 }
 
@@ -41,27 +48,27 @@ include 'templates/header.php';
                                 <?php echo $errorMessage; ?>
                             </div>
                         <?php endif; ?>
-                        <h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
+                        <h1 class="fs-4 card-title fw-bold mb-4">Sign Up</h1>
                         <form method="POST" class="needs-validation" novalidate="" autocomplete="off">
                             <div class="mb-3">
                                 <label class="mb-2 text-muted" for="username">Username</label>
                                 <input id="username" type="text" class="form-control" name="username" value="" required autofocus>
-
                             </div>
-
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="email">Email</label>
+                                <input id="email" type="email" class="form-control" name="email" value="" required>
+                            </div>
                             <div class="mb-3">
                                 <label class="mb-2 text-muted" for="password">Password</label>
                                 <input id="password" type="password" class="form-control" name="password" required>
-
                             </div>
-
                             <div class="d-flex align-items-center">
-                                <button type="submit" class="btn btn-primary ms-auto">Login</button>
+                                <button type="submit" class="btn btn-primary ms-auto">Sign Up</button>
                             </div>
                         </form>
                     </div>
                     <div class="card-footer py-3 border-0">
-
+                        <p>Already have an account? <a href="login.php">Login here</a>.</p>
                     </div>
                 </div>
                 <div class="text-center mt-5 text-muted">
