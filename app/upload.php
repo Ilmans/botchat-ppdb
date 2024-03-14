@@ -37,8 +37,14 @@ if (!in_array($extension, $allowedExtension)) {
 }
 //delete old template
 try {
-    unlink(ROOT_PATH . '/upload/template.doc');
-    unlink(ROOT_PATH . '/upload/template.docx');
+    $file1 = ROOT_PATH . '/upload/template.doc';
+    $file2 = ROOT_PATH . '/upload/template.docx';
+    if (file_exists($file1)) {
+        unlink($file1);
+    }
+    if (file_exists($file2)) {
+        unlink($file2);
+    }
 } catch (\Throwable $th) {
     //throw $th;
 }

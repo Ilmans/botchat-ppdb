@@ -3,6 +3,7 @@
 namespace classes;
 
 use classes\Database;
+use PDO;
 
 class PpdbRepository extends Database
 {
@@ -20,13 +21,19 @@ class PpdbRepository extends Database
         $stmt->execute(['registration_no' => $regNo]);
         return $stmt->rowCount() > 0;
     }
+    private function getLastRegistrationNumber()
+    {
+        $stmt = $this->conn->query("SELECT registration_no FROM ppdbs ORDER BY id DESC LIMIT 1");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? $row['registration_no'] : 'PPDB0';
+    }
     private function randomRegistrationNumber()
     {
-        $regNo = "";
-        do {
-            $regNo = "PPDB" . rand(1000, 9999);
-        } while ($this->checkRegistrationNumber($regNo));
-        return $regNo;
+        $lastRegNo = $this->getLastRegistrationNumber();
+        $lastRegNoNumericPart = substr($lastRegNo, 4); // Remove the "PPDB" prefix
+        $newRegNoNumericPart = intval($lastRegNoNumericPart) + 1; // Increment the numeric part
+        $newRegNo = "PPDB" . $newRegNoNumericPart; // Concatenate the "PPDB" prefix and the new numeric part
+        return $newRegNo;
     }
     public function insertPpdb($full_name, $ttl, $gender, $blood_type, $school_origin, $school_origin_type, $school_origin_address, $ijazah_number, $nisn, $religion, $student_address, $student_phone, $father_name, $father_job, $father_phone, $mother_name, $mother_job, $mother_phone, $parents_address, $guardian_name, $guardian_job, $guardian_phone, $guardian_relationship, $guardian_address, $first_choice, $second_choice, $information_source, $friend_name, $has_kip)
     {

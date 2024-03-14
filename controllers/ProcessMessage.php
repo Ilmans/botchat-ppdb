@@ -369,7 +369,7 @@ class ProcessMessage
                         $data['konsentrasi_pilihan_pertama'],
                         $data['konsentrasi_pilihan_kedua'],
                         $data['info_pendaftaran'],
-                        $data['informasi_teman'],
+                        $data['informasi_teman'] ?? '-',
                         $msg == 'ya' ? 1 : 0
 
                     );
