@@ -82,7 +82,7 @@ class ProcessMessage
 
             $urlPdf = BASE_URL . '/upload/documents/' . $reg['registration_no'] . '.docx';
             return $this->responFormatter->line('Berikut detail pendaftaran anda')
-                ->responAsDocument($urlPdf, "Pendaftaran " . $reg['registration_no'] . ".docx", 'docx');
+                ->responAsDocument($urlPdf, "Pendaftaran " . $reg['registration_no'] . ".docx");
         }
 
         $cache = $this->cache->get($from);

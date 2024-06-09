@@ -6,6 +6,9 @@ Instalasi
 - upload database dan hubungkan
 
 Masukan url http://urlnya/webhook.php ke webhook m pedia
+Simple dashboard : /login
+user : admin 
+pass : 111111
 
 ---
 

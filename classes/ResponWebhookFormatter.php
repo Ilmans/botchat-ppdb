@@ -241,27 +241,13 @@ class ResponWebhookFormatter
      * @param string $type
      * @return string
      */
-    public function responAsDocument($url = '', $filename = '', $type = 'pdf')
+    public function responAsDocument($url = '', $filename = '', $type = 'document')
     {
-        $mimetypes = [
-            'pdf' => 'application/pdf',
-            'xls' => 'application/excel',
-            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'doc' => 'application/msword',
-            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'zip' => 'application/zip',
-            'mp3' => 'application/mp3',
-        ];
-
-        $mimetype = $mimetypes[$type] ?? 'application/pdf';
-        $filename = $filename . '.' . $type;
-
-        $message = [
-            'document' => ['url' => $url],
-            'mimetype' => $mimetype,
-            'fileName' => $filename,
+        return json_encode([
+            'type' => $type, //image,video,document or audio
+            'url' => $url,
+            'filename' => $filename, //optional
             'caption' => $this->convertLines(),
-        ];
-        return json_encode($message);
+        ]);
     }
 }
